@@ -1,0 +1,15 @@
+# Smayan Daruka
+# This is an audit file for Tenable Security Center.
+# This audit file is used to retrieve the signature version of virus definitions for Carbon Black on Windows endpoints.
+# This audit does not perform any checks and returns only the signature version and strips all other irrelevant information.
+
+<check_type: "Windows" version:"2">
+<custom_item>
+  type            : AUDIT_POWERSHELL
+  description     : "Carbon Black Signature Version"
+  value_type      : POLICY_TEXT
+  value_data      : ""
+  powershell_args :"(((& 'C:\Program Files\Confer\repcli' status | Select-String -Pattern 'vdf' | Out-String).trim()) | ForEach-Object {[regex]::matches($_,'vdf.*$').value} | Out-String).TrimEnd().TrimEnd(']')"
+  only_show_cmd_output: YES
+</custom_item>
+</check_type>

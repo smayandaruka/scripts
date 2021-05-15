@@ -1,0 +1,33 @@
+# Smayan Daruka
+# This is an audit file for Tenable Security Center.
+# This audit file is used to retrieve the Carbon Black Sensor status on Windows endpoints.
+# The audit passes if Carbon Black is installed and the sensor is enabled/enforcing.
+# The audit fails if Carbon Black is not installed or if the sensor is disabled.
+# This audit performs a single check to ensure the Carbon Black sensor is enabled and enforcing.
+
+<check_type: "Windows" version:"2">
+
+<if>
+  <condition>
+    <custom_item>
+      type            : AUDIT_POWERSHELL
+      description     : "Carbon Black Sensor Enabled"
+      value_type      : POLICY_TEXT
+      value_data      : "Sensor State[Enabled]"
+      powershell_args :"(& 'C:\Program Files\Confer\repcli' status | Select-String -Pattern 'Sensor State' -Context 0,0 | Out-String).trim()"
+    </custom_item>
+  </condition>
+    <then>
+      <report type: "PASSED">
+        description : "Carbon Black Sensor Enabled"
+        info        : "The endpoint has Carbon Black installed and sensor is enabled/running"
+      </report>
+    </then>
+  <else>
+	<report type: "FAILED">
+	  description	: "Carbon Black Sensor Disabled/Not Installed"
+	  info        : "The endpoint does not have Carbon Black installed and/or sensor is NOT running"
+	</report>
+  </else>
+</if>
+</check_type>
